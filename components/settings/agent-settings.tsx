@@ -125,12 +125,12 @@ export function AgentSettings({
 
             {/* Mode indicator */}
             <div
-              className={`p-3 rounded-lg text-sm ${
+              className={`p-3 rounded-[6px] text-sm ${
                 selectedAgentIds.length === 0
-                  ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800'
+                  ? 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/50'
                   : selectedAgentIds.length === 1
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
-                    : 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'
+                    ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50'
+                    : 'bg-primary/5 dark:bg-primary/15 text-primary border border-primary/20'
               }`}
             >
               {selectedAgentIds.length === 0 && (

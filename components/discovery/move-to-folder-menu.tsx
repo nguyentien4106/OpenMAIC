@@ -42,14 +42,14 @@ export function MoveToFolderMenu({
           title={t('classroom.moveToFolder')}
           onClick={(e) => e.stopPropagation()}
           onPointerDown={(e) => e.stopPropagation()}
-          className="absolute top-2 right-20 size-7 inline-flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white hover:text-white backdrop-blur-sm opacity-0 transition-opacity z-10 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 pointer-coarse:opacity-100 group-hover:opacity-100"
+          className="absolute top-2 right-20 size-7 inline-flex items-center justify-center rounded-[6px] bg-slate-900/80 hover:bg-slate-900 text-white hover:text-white backdrop-blur-sm opacity-0 transition-opacity z-10 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary pointer-coarse:opacity-100 group-hover:opacity-100"
         >
           <FolderInput className="size-3.5" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-56"
+        className="w-56 rounded-[6px]"
         onClick={(e) => e.stopPropagation()}
         onPointerDown={(e) => e.stopPropagation()}
       >
@@ -62,7 +62,7 @@ export function MoveToFolderMenu({
           className="flex items-center justify-between"
         >
           <span>{t('classroom.ungrouped')}</span>
-          {currentFolderId === undefined && <Check className="size-3.5 text-violet-500" />}
+          {currentFolderId === undefined && <Check className="size-3.5 text-primary" />}
         </DropdownMenuItem>
 
         {/* All folders */}
@@ -73,7 +73,7 @@ export function MoveToFolderMenu({
             className="flex items-center justify-between"
           >
             <span className="truncate">{f.name}</span>
-            {currentFolderId === f.id && <Check className="size-3.5 text-violet-500 shrink-0" />}
+            {currentFolderId === f.id && <Check className="size-3.5 text-primary shrink-0" />}
           </DropdownMenuItem>
         ))}
 

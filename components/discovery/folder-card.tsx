@@ -174,10 +174,10 @@ export function FolderCard({
       <div
         ref={thumbRef}
         className={cn(
-          'relative w-full aspect-[16/9] rounded-2xl bg-gradient-to-br from-violet-50 to-blue-50 dark:from-violet-900/20 dark:to-blue-900/20 overflow-hidden transition-transform duration-200 group-hover:scale-[1.02] ring-1',
+          'relative w-full aspect-[16/9] rounded-[6px] bg-slate-50 dark:bg-slate-900 border border-border overflow-hidden transition-colors',
           dropActive
-            ? 'ring-2 ring-violet-500 ring-offset-2 ring-offset-background scale-[1.03]'
-            : 'ring-violet-200/50 dark:ring-violet-800/40',
+            ? 'border-primary ring-1 ring-primary'
+            : 'hover:border-slate-300 dark:hover:border-slate-700',
         )}
       >
         {hasCovers ? (
@@ -185,8 +185,8 @@ export function FolderCard({
         ) : courseCount === 0 ? (
           // Truly empty folder: folder icon.
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-            <div className="size-14 rounded-2xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
-              <Folder className="size-7 text-violet-500 dark:text-violet-300" />
+            <div className="size-12 rounded-[6px] bg-muted border border-border flex items-center justify-center">
+              <Folder className="size-6 text-muted-foreground" />
             </div>
           </div>
         ) : (
@@ -194,24 +194,24 @@ export function FolderCard({
           // distinct from the empty-folder icon, so it does not read as empty.
           <div className="absolute inset-0 flex items-center justify-center">
             <div
-              className="w-[60%] aspect-[16/9] rounded-xl bg-violet-200/60 dark:bg-violet-800/30 shadow-md ring-1 ring-violet-300/30 dark:ring-violet-700/30"
+              className="w-[60%] aspect-[16/9] rounded-[4px] bg-muted border border-border"
               style={{ transform: 'translate(-3%, 2%)' }}
             />
             <div
-              className="absolute w-[60%] aspect-[16/9] rounded-xl bg-violet-300/50 dark:bg-violet-700/20 shadow-md ring-1 ring-violet-300/30 dark:ring-violet-700/30"
+              className="absolute w-[60%] aspect-[16/9] rounded-[4px] bg-muted/80 border border-border"
               style={{ transform: 'translate(3%, -1%)' }}
             />
           </div>
         )}
 
         {/* Course count badge — always visible (bottom-right). */}
-        <span className="absolute bottom-2 right-2 z-10 inline-flex items-center rounded-full bg-black/40 px-2 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+        <span className="absolute bottom-2 right-2 z-10 inline-flex items-center rounded-[4px] border border-border bg-card/90 px-1.5 py-0.5 text-[11px] font-medium text-foreground tabular-nums">
           {courseCount} {t('classroom.folderCourseCountUnit')}
         </span>
 
         {dropActive && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-violet-500/20 backdrop-blur-[2px]">
-            <Folder className="size-8 text-white drop-shadow" />
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-primary/10 backdrop-blur-[2px]">
+            <Folder className="size-8 text-primary drop-shadow" />
           </div>
         )}
 
@@ -233,7 +233,7 @@ export function FolderCard({
                     e.stopPropagation();
                     setConfirmingDelete(true);
                   }}
-                  className="absolute top-2 right-2 size-7 inline-flex items-center justify-center rounded-full bg-black/30 hover:bg-destructive/80 text-white hover:text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  className="absolute top-2 right-2 size-7 inline-flex items-center justify-center rounded-[6px] bg-slate-900/80 hover:bg-destructive text-white hover:text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 >
                   <Trash2 className="size-3.5" />
                 </button>
@@ -245,7 +245,7 @@ export function FolderCard({
                       aria-label={t('classroom.delete')}
                       onClick={(e) => e.stopPropagation()}
                       onPointerDown={(e) => e.stopPropagation()}
-                      className="absolute top-2 right-2 size-7 inline-flex items-center justify-center rounded-full bg-black/30 hover:bg-destructive/80 text-white hover:text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      className="absolute top-2 right-2 size-7 inline-flex items-center justify-center rounded-[6px] bg-slate-900/80 hover:bg-destructive text-white hover:text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     >
                       <Trash2 className="size-3.5" />
                     </button>
@@ -253,7 +253,7 @@ export function FolderCard({
                   <DropdownMenuContent
                     align="end"
                     onClick={(e) => e.stopPropagation()}
-                    className="min-w-[200px]"
+                    className="min-w-[200px] rounded-[6px]"
                   >
                     <DropdownMenuItem
                       onClick={() => onDelete('ungroup')}
@@ -285,7 +285,7 @@ export function FolderCard({
                   e.stopPropagation();
                   startEditing();
                 }}
-                className="absolute top-2 right-11 size-7 inline-flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white hover:text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                className="absolute top-2 right-11 size-7 inline-flex items-center justify-center rounded-[6px] bg-slate-900/80 hover:bg-slate-900 text-white hover:text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
               >
                 <Pencil className="size-3.5" />
               </button>
@@ -319,13 +319,13 @@ export function FolderCard({
               </span>
               <div className="flex gap-2">
                 <button
-                  className="px-3.5 py-1 rounded-lg text-[12px] font-medium bg-white/15 text-white/80 hover:bg-white/25 backdrop-blur-sm transition-colors"
+                  className="px-3 py-1 rounded-[6px] text-[12px] font-medium bg-white/15 text-white/80 hover:bg-white/25 backdrop-blur-sm transition-colors"
                   onClick={() => setConfirmingDelete(false)}
                 >
                   {t('common.cancel')}
                 </button>
                 <button
-                  className="px-3.5 py-1 rounded-lg text-[12px] font-medium bg-red-500/90 text-white hover:bg-red-500 transition-colors"
+                  className="px-3 py-1 rounded-[6px] text-[12px] font-medium bg-destructive text-white hover:bg-destructive/90 transition-colors"
                   onClick={() => {
                     // Close the overlay before the async delete: on success the
                     // card unmounts; on failure the user sees the error toast
@@ -344,7 +344,7 @@ export function FolderCard({
       </div>
 
       <div className="mt-2.5 px-1 flex items-center gap-2">
-        <span className="shrink-0 inline-flex items-center rounded-full bg-violet-100 dark:bg-violet-900/30 px-2 py-0.5 text-[11px] font-medium text-violet-600 dark:text-violet-400">
+        <span className="shrink-0 inline-flex items-center rounded-[4px] border border-border bg-muted/60 px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
           {t('classroom.folderBadge')}
         </span>
         {editing ? (
@@ -436,7 +436,7 @@ function CoverStack({
             }}
           >
             {thumbWidth > 0 && (
-              <div className="aspect-[16/9] w-full rounded-xl overflow-hidden shadow-md ring-1 ring-black/5 bg-slate-200 dark:bg-slate-700">
+              <div className="aspect-[16/9] w-full rounded-[4px] overflow-hidden border border-border bg-slate-200 dark:bg-slate-700">
                 <SlideThumbnail
                   slide={cover}
                   size={Math.round((thumbWidth * widthPct) / 100)}

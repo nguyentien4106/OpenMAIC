@@ -32,19 +32,19 @@ export function LanguageSwitcher({ onOpen }: LanguageSwitcherProps) {
       }}
     >
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200 hover:shadow-sm transition-all">
+        <button className="flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors border border-transparent hover:border-border">
           {supportedLocales.find((l) => l.code === locale)?.shortLabel ?? locale}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={8} className="min-w-[120px]">
+      <DropdownMenuContent align="end" sideOffset={6} className="min-w-[130px] rounded-[6px] border border-border shadow-none">
         {supportedLocales.map((l) => (
           <DropdownMenuItem
             key={l.code}
             onSelect={() => setLocale(l.code)}
             className={cn(
-              'cursor-pointer',
+              'cursor-pointer rounded-[4px] text-xs font-medium',
               locale === l.code &&
-                'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
+                'bg-primary/10 text-primary font-semibold dark:bg-primary/20',
             )}
           >
             {l.label}

@@ -47,10 +47,12 @@ export function CourseRunStatusLabel({ status }: { readonly status: CourseRunSta
   return (
     <span
       className={cn(
-        'shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium',
+        'shrink-0 inline-flex items-center gap-1 rounded-[4px] border px-2 py-0.5 text-[11px] font-medium tabular-nums',
         status.kind === 'paused'
-          ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
-          : 'bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
+          ? 'bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40'
+          : status.kind === 'awaiting-confirmation'
+          ? 'bg-red-50 text-red-700 border-red-200/80 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/40'
+          : 'bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40',
       )}
       data-testid="course-run-status"
     >
