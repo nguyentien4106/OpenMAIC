@@ -79,7 +79,8 @@ export type ImageProviderId =
   | 'grok-image'
   | 'comfyui-image'
   | 'openrouter-image'
-  | 'lemonade';
+  | 'lemonade'
+  | 'custom-image';
 // Add new image providers below (uncomment and modify):
 // | 'dall-e'
 // | 'midjourney'
@@ -108,6 +109,14 @@ export interface ImageProviderConfig {
   requiresApiKey: boolean;
   /** Default API base URL (can be overridden in user settings) */
   defaultBaseUrl?: string;
+  /**
+   * Whether a workspace provider of this preset must name its own endpoint.
+   * True for a generic gateway (`custom-image`), whose endpoint IS the
+   * service: there is no vendor default to fall back on. The settings list
+   * the preset as available only when it can take one (see
+   * `workspacePresetProblem`), and the server stores it per provider.
+   */
+  requiresBaseUrl?: boolean;
   /** Path to provider icon asset */
   icon?: string;
   /** Available models for this provider */
@@ -219,7 +228,8 @@ export type VideoProviderId =
   | 'minimax-video'
   | 'grok-video'
   | 'openrouter-video'
-  | 'happyhorse';
+  | 'happyhorse'
+  | 'custom-video';
 // Add new video providers below (uncomment and modify):
 // | 'runway'
 // | 'pika'
@@ -242,6 +252,8 @@ export interface VideoProviderConfig {
   requiresApiKey: boolean;
   /** Default API base URL (can be overridden in user settings) */
   defaultBaseUrl?: string;
+  /** See {@link ImageProviderConfig.requiresBaseUrl}: true for a generic gateway. */
+  requiresBaseUrl?: boolean;
   /** Path to provider icon asset */
   icon?: string;
   /** Available models for this provider */

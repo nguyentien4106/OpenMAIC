@@ -378,3 +378,60 @@ export async function verifySavedModel(
   });
   return (await response.json()) as { success: boolean; error?: string };
 }
+
+/**
+ * Generate one real image from a saved image provider, to prove the whole path.
+ *
+ * Deliberately not a probe: it spends a generation, and it reports the
+ * provider's own error text when it fails, because that text is the answer the
+ * user is looking for (`/api/provider/test-image-generation`).
+ */
+export async function testImageGeneration(
+  providerId: string,
+  input: { model?: string; prompt?: string; aspectRatio?: string } = {},
+): Promise<{
+  success: boolean;
+  message?: string;
+  imageUrl?: string;
+  ms?: number;
+  width?: number;
+  height?: number;
+  error?: string;
+}> {
+  const response = await fetch('/api/provider/test-image-generation', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider: providerId, ...input }),
+  });
+  return (await response.json()) as {
+    success: boolean;
+    message?: string;
+    imageUrl?: string;
+    ms?: number;
+    width?: number;
+    height?: number;
+    error?: string;
+  };
+}
+
+/**
+ * Test a saved image or video provider on the server, with its stored key. The
+ * server resolves the provider's own endpoint and key, so nothing secret passes
+ * through the browser. Shared by the media panels, which all offer the test.
+ *
+ * `message` is the probe's own wording and is worth showing: for a service the
+ * workspace pointed itself it says what was actually proven (the address, or
+ * the key), which a fixed "connected" string would flatten into the same claim.
+ */
+export async function verifySavedMedia(
+  kind: 'image' | 'video',
+  providerId: string,
+  modelId?: string,
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  const response = await fetch(`/api/verify-${kind}-provider`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider: providerId, ...(modelId ? { model: modelId } : {}) }),
+  });
+  return (await response.json()) as { success: boolean; message?: string; error?: string };
+}

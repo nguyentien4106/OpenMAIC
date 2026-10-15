@@ -31,6 +31,10 @@ import {
   OPENROUTER_DEFAULT_BASE_URL,
   openRouterBaseUrl,
 } from './adapters/openrouter-image-adapter';
+import {
+  generateWithCustomVideo,
+  testCustomVideoConnectivity,
+} from './adapters/custom-video-adapter';
 
 export const VIDEO_PROVIDERS: Record<VideoProviderId, VideoProviderConfig> = {
   seedance: {
@@ -152,6 +156,24 @@ export const VIDEO_PROVIDERS: Record<VideoProviderId, VideoProviderConfig> = {
     supportedResolutions: ['480p', '720p', '1080p'],
     maxDuration: 10,
   },
+  /**
+   * A workspace's own video gateway. See `image-providers.ts`'s `custom-image`
+   * for the shared reasoning; the difference is the protocol. It speaks the
+   * OpenRouter-compatible `/videos` shape, since video has no de-facto
+   * standard — the adapter documents why.
+   */
+  'custom-video': {
+    id: 'custom-video',
+    name: 'Custom Video (OpenRouter-compatible)',
+    requiresApiKey: true,
+    requiresBaseUrl: true,
+    // No catalogue: the workspace's own model ids are the catalogue.
+    models: [],
+    supportedAspectRatios: ['16:9', '9:16', '1:1', '4:3', '3:4', '21:9'],
+    supportedDurations: [4, 5, 6, 8, 10],
+    supportedResolutions: ['480p', '720p', '1080p'],
+    maxDuration: 10,
+  },
 };
 
 export async function testVideoConnectivity(
@@ -172,6 +194,8 @@ export async function testVideoConnectivity(
       return testHappyHorseConnectivity(config);
     case 'openrouter-video':
       return testOpenRouterVideoConnectivity(config);
+    case 'custom-video':
+      return testCustomVideoConnectivity(config);
     default:
       return {
         success: false,
@@ -232,8 +256,11 @@ export function videoTaskEndpoint(providerId: VideoProviderId, baseUrl?: string)
   const root =
     providerId === 'seedance'
       ? seedanceApiRoot(baseUrl)
-      : providerId === 'openrouter-video'
-        ? openRouterBaseUrl(baseUrl)
+      : providerId === 'openrouter-video' || providerId === 'custom-video'
+        ? // `custom-video` speaks the same protocol at its own endpoint, so it
+          // normalises the same way: two spellings of one endpoint must reach
+          // the same tasks, or a resumed wait would not find the one it submitted.
+          openRouterBaseUrl(baseUrl)
         : baseUrl || VIDEO_PROVIDERS[providerId]?.defaultBaseUrl || '';
   return root.replace(/\/+$/, '');
 }
@@ -263,6 +290,8 @@ export async function generateVideo(
       return generateWithHappyHorse(config, options, control);
     case 'openrouter-video':
       return generateWithOpenRouterVideo(config, options, control);
+    case 'custom-video':
+      return generateWithCustomVideo(config, options, control);
     default:
       throw new Error(`Unsupported video provider: ${config.providerId}`);
   }

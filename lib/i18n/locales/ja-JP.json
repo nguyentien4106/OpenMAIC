@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image（xAI）",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "カスタム画像（OpenAI 互換）",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image（ローカル）",
     "testImageGeneration": "画像生成をテスト",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video（xAI）",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "カスタム動画（OpenRouter 互換）",
     "providerHappyHorse": "HappyHorse（Alibaba Cloud）",
     "testVideoGeneration": "動画生成をテスト",
     "testVideoConnectivity": "接続テスト",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "サーバーがインポートを確認しませんでした。"
       }
     },
-    "serverConfiguredAddOwn": "独自の認証情報を使うには、別のプロバイダーを追加してください。"
+    "serverConfiguredAddOwn": "独自の認証情報を使うには、別のプロバイダーを追加してください。",
+    "customEndpointImageHint": "リクエストは {baseUrl}/images/generations（OpenAI 互換の画像形式）に送信されます。",
+    "customEndpointVideoHint": "リクエストは {baseUrl} の OpenRouter 互換動画 API に従います：POST /videos の後、ポーリングして動画を取得します。",
+    "customEndpointGenerateTitle": "画像生成のテスト",
+    "customEndpointGenerateHint": "この endpoint で実際に画像を生成して表示します。プロバイダーのクォータを消費し、課金される場合があります。",
+    "customEndpointGeneratePrompt": "テスト用プロンプト",
+    "customEndpointGenerateButton": "テスト画像を生成",
+    "customEndpointGenerating": "生成中…",
+    "customEndpointGenerateAlt": "この endpoint が生成した画像",
+    "customEndpointGenerateOk": "endpoint は画像を生成できました。",
+    "customEndpointGenerateFailed": "生成に失敗しました"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

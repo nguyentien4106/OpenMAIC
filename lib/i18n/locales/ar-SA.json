@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "صورة مخصصة (متوافقة مع OpenAI)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (محلي)",
     "testImageGeneration": "اختبار توليد الصور",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "فيديو مخصص (متوافق مع OpenRouter)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "اختبار توليد الفيديو",
     "testVideoConnectivity": "اختبار الاتصال",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "لم يؤكد الخادم أنه تم استيراده."
       }
     },
-    "serverConfiguredAddOwn": "لاستخدام بيانات الاعتماد الخاصة بك، أضِف مزوّدًا منفصلاً."
+    "serverConfiguredAddOwn": "لاستخدام بيانات الاعتماد الخاصة بك، أضِف مزوّدًا منفصلاً.",
+    "customEndpointImageHint": "تُرسل الطلبات إلى {baseUrl}/images/generations، وهو تنسيق الصور المتوافق مع OpenAI.",
+    "customEndpointVideoHint": "تتبع الطلبات واجهة الفيديو المتوافقة مع OpenRouter على {baseUrl}: POST /videos، ثم الاستعلام وجلب المقطع.",
+    "customEndpointGenerateTitle": "اختبار توليد الصور",
+    "customEndpointGenerateHint": "يولّد صورة حقيقية عبر هذه النقطة ويعرضها. يستهلك هذا حصة مزوّدك وقد يُحتسب بمقابل.",
+    "customEndpointGeneratePrompt": "الطلب التجريبي",
+    "customEndpointGenerateButton": "توليد صورة تجريبية",
+    "customEndpointGenerating": "جارٍ التوليد…",
+    "customEndpointGenerateAlt": "صورة ولّدتها هذه النقطة",
+    "customEndpointGenerateOk": "تمكّنت النقطة من توليد صورة.",
+    "customEndpointGenerateFailed": "فشل التوليد"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

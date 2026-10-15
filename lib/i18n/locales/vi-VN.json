@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "Ảnh tùy chỉnh (tương thích OpenAI)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (Cục bộ)",
     "testImageGeneration": "Kiểm tra tạo ảnh",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "Video tùy chỉnh (tương thích OpenRouter)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "Kiểm tra tạo video",
     "testVideoConnectivity": "Kiểm tra kết nối",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "Máy chủ không xác nhận đã nhập."
       }
     },
-    "serverConfiguredAddOwn": "Muốn dùng thông tin đăng nhập riêng, hãy thêm một nhà cung cấp khác."
+    "serverConfiguredAddOwn": "Muốn dùng thông tin đăng nhập riêng, hãy thêm một nhà cung cấp khác.",
+    "customEndpointImageHint": "Yêu cầu được gửi tới {baseUrl}/images/generations — định dạng ảnh tương thích OpenAI.",
+    "customEndpointVideoHint": "Yêu cầu tuân theo API video tương thích OpenRouter tại {baseUrl}: POST /videos, sau đó thăm dò và tải video về.",
+    "customEndpointGenerateTitle": "Tạo ảnh thử",
+    "customEndpointGenerateHint": "Tạo một ảnh thật qua endpoint này và hiển thị kết quả. Việc này dùng quota của nhà cung cấp và có thể bị tính phí.",
+    "customEndpointGeneratePrompt": "Prompt thử",
+    "customEndpointGenerateButton": "Tạo ảnh thử",
+    "customEndpointGenerating": "Đang tạo…",
+    "customEndpointGenerateAlt": "Ảnh do endpoint này tạo ra",
+    "customEndpointGenerateOk": "Endpoint đã tạo được ảnh.",
+    "customEndpointGenerateFailed": "Tạo ảnh thất bại"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

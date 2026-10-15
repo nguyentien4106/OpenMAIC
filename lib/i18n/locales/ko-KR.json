@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "사용자 지정 이미지(OpenAI 호환)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (로컬)",
     "testImageGeneration": "이미지 생성 테스트",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "사용자 지정 동영상(OpenRouter 호환)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "동영상 생성 테스트",
     "testVideoConnectivity": "연결 테스트",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "서버가 가져오기를 확인하지 않았습니다."
       }
     },
-    "serverConfiguredAddOwn": "본인 자격 증명을 사용하려면 별도의 제공업체를 추가하세요."
+    "serverConfiguredAddOwn": "본인 자격 증명을 사용하려면 별도의 제공업체를 추가하세요.",
+    "customEndpointImageHint": "요청은 {baseUrl}/images/generations(OpenAI 호환 이미지 형식)로 전송됩니다.",
+    "customEndpointVideoHint": "요청은 {baseUrl}의 OpenRouter 호환 동영상 API를 따릅니다: POST /videos 후 폴링하여 클립을 가져옵니다.",
+    "customEndpointGenerateTitle": "이미지 생성 테스트",
+    "customEndpointGenerateHint": "이 endpoint로 실제 이미지를 생성해 보여 줍니다. 공급자 할당량을 사용하며 요금이 부과될 수 있습니다.",
+    "customEndpointGeneratePrompt": "테스트 프롬프트",
+    "customEndpointGenerateButton": "테스트 이미지 생성",
+    "customEndpointGenerating": "생성 중…",
+    "customEndpointGenerateAlt": "이 endpoint가 생성한 이미지",
+    "customEndpointGenerateOk": "endpoint가 이미지를 생성했습니다.",
+    "customEndpointGenerateFailed": "생성 실패"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

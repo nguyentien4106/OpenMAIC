@@ -34,6 +34,10 @@ import {
   testOpenRouterImageConnectivity,
   OPENROUTER_DEFAULT_BASE_URL,
 } from './adapters/openrouter-image-adapter';
+import {
+  generateWithCustomImage,
+  testCustomImageConnectivity,
+} from './adapters/custom-image-adapter';
 
 export const IMAGE_PROVIDERS: Record<ImageProviderId, ImageProviderConfig> = {
   seedream: {
@@ -177,6 +181,26 @@ export const IMAGE_PROVIDERS: Record<ImageProviderId, ImageProviderConfig> = {
     ],
     supportedAspectRatios: ['16:9', '4:3', '1:1', '9:16'],
   },
+  /**
+   * A workspace's own OpenAI-compatible image endpoint. Unlike every other
+   * entry here, this one has no vendor behind it: the endpoint IS the service,
+   * which is why it names no `defaultBaseUrl` and no catalogue, and why it is
+   * the one image preset a workspace may point at an address of its own
+   * (`requiresBaseUrl` + `trustsModelCatalogue: false` in
+   * `provider-presets.ts`). The models it offers are the ones the workspace
+   * types in Settings; the request goes to `{baseUrl}/images/generations`.
+   */
+  'custom-image': {
+    id: 'custom-image',
+    name: 'Custom Image (OpenAI-compatible)',
+    requiresApiKey: true,
+    requiresBaseUrl: true,
+    // No catalogue: the workspace's own model ids are the catalogue, and a
+    // placeholder here would resolve to a dead model id the first time this
+    // provider became active (the reasoning `comfyui-image` documents).
+    models: [],
+    supportedAspectRatios: ['16:9', '4:3', '1:1', '9:16'],
+  },
 };
 
 export async function testImageConnectivity(
@@ -201,6 +225,8 @@ export async function testImageConnectivity(
       return testLemonadeImageConnectivity(config);
     case 'openrouter-image':
       return testOpenRouterImageConnectivity(config);
+    case 'custom-image':
+      return testCustomImageConnectivity(config);
     default:
       return {
         success: false,
@@ -232,6 +258,8 @@ export async function generateImage(
       return generateWithLemonadeImage(config, options);
     case 'openrouter-image':
       return generateWithOpenRouterImage(config, options);
+    case 'custom-image':
+      return generateWithCustomImage(config, options);
     default:
       throw new Error(`Unsupported image provider: ${config.providerId}`);
   }

@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "Benutzerdefiniertes Bild (OpenAI-kompatibel)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (Lokal)",
     "testImageGeneration": "Bildgenerierung testen",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "Benutzerdefiniertes Video (OpenRouter-kompatibel)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "Videogenerierung testen",
     "testVideoConnectivity": "Verbindung testen",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "Der Server hat den Import nicht bestätigt."
       }
     },
-    "serverConfiguredAddOwn": "Um eigene Zugangsdaten zu verwenden, füge einen separaten Anbieter hinzu."
+    "serverConfiguredAddOwn": "Um eigene Zugangsdaten zu verwenden, füge einen separaten Anbieter hinzu.",
+    "customEndpointImageHint": "Anfragen gehen an {baseUrl}/images/generations, das OpenAI-kompatible Bildformat.",
+    "customEndpointVideoHint": "Anfragen folgen der OpenRouter-kompatiblen Video-API unter {baseUrl}: POST /videos, dann abfragen und den Clip laden.",
+    "customEndpointGenerateTitle": "Bildgenerierung testen",
+    "customEndpointGenerateHint": "Erzeugt ein echtes Bild über diesen Endpunkt und zeigt es an. Das verbraucht das Kontingent Ihres Anbieters und kann kostenpflichtig sein.",
+    "customEndpointGeneratePrompt": "Test-Prompt",
+    "customEndpointGenerateButton": "Testbild erzeugen",
+    "customEndpointGenerating": "Wird erzeugt…",
+    "customEndpointGenerateAlt": "Von diesem Endpunkt erzeugtes Bild",
+    "customEndpointGenerateOk": "Der Endpunkt hat ein Bild erzeugt.",
+    "customEndpointGenerateFailed": "Erzeugung fehlgeschlagen"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

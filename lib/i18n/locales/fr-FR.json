@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "Image personnalisée (compatible OpenAI)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (local)",
     "testImageGeneration": "Tester la génération d’images",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "Vidéo personnalisée (compatible OpenRouter)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "Tester la génération de vidéos",
     "testVideoConnectivity": "Tester la connexion",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "Le serveur n'a pas confirmé l'importation."
       }
     },
-    "serverConfiguredAddOwn": "Pour utiliser vos propres identifiants, ajoutez un fournisseur distinct."
+    "serverConfiguredAddOwn": "Pour utiliser vos propres identifiants, ajoutez un fournisseur distinct.",
+    "customEndpointImageHint": "Les requêtes sont envoyées à {baseUrl}/images/generations, le format d'image compatible OpenAI.",
+    "customEndpointVideoHint": "Les requêtes suivent l'API vidéo compatible OpenRouter sur {baseUrl} : POST /videos, puis interroger et récupérer le clip.",
+    "customEndpointGenerateTitle": "Tester la génération d’images",
+    "customEndpointGenerateHint": "Génère une vraie image via ce point de terminaison et l’affiche. Cela consomme le quota de votre fournisseur et peut être facturé.",
+    "customEndpointGeneratePrompt": "Invite de test",
+    "customEndpointGenerateButton": "Générer une image de test",
+    "customEndpointGenerating": "Génération…",
+    "customEndpointGenerateAlt": "Image générée par ce point de terminaison",
+    "customEndpointGenerateOk": "Le point de terminaison a généré une image.",
+    "customEndpointGenerateFailed": "Échec de la génération"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

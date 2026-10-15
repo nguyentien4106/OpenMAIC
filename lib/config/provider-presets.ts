@@ -103,6 +103,22 @@ const REQUIRES_BASE_URL: Partial<Record<SlotCapability, readonly string[]>> = {
   document: ['mineru'],
 };
 
+/**
+ * Registry entries that exist only to take a caller-supplied endpoint: the
+ * entry supplies the transport and nothing else, so a workspace may name that
+ * endpoint, and the models it types are the catalogue
+ * ({@link allowsWorkspaceEndpoint}).
+ *
+ * These are the media counterparts of the chat `openai-compatible` preset
+ * below, and like it they are the *only* presets of their capability that a
+ * workspace may point elsewhere. Every built-in service keeps the
+ * deployment-only rule, since its endpoint is part of what that service is.
+ */
+const WORKSPACE_ENDPOINT_ENTRIES: Partial<Record<SlotCapability, readonly string[]>> = {
+  image: ['custom-image'],
+  video: ['custom-video'],
+};
+
 const MODALITY_CAPABILITY: Record<TokenPlanModality, SlotCapability> = {
   llm: 'chat',
   image: 'image',
@@ -120,6 +136,9 @@ function singlePresets(): ProviderPreset[] {
     for (const [registryId, entry] of Object.entries(registry)) {
       const requiresBaseUrl =
         entry.requiresBaseUrl === true || !!REQUIRES_BASE_URL[capability]?.includes(registryId);
+      // The endpoint is the service: nothing in the registry describes what
+      // sits behind it, so the workspace's own model list is what it offers.
+      const workspaceEndpoint = !!WORKSPACE_ENDPOINT_ENTRIES[capability]?.includes(registryId);
       presets.push({
         id: presetIdFor(capability, registryId),
         name: entry.name ?? registryId,
@@ -127,6 +146,7 @@ function singlePresets(): ProviderPreset[] {
         capabilities: { [capability]: { registryId } },
         ...(requiresBaseUrl ? { requiresBaseUrl } : {}),
         ...(entry.requiresCredentials ? { requiresCredentials: true } : {}),
+        ...(workspaceEndpoint ? { trustsModelCatalogue: false } : {}),
       });
     }
   }
@@ -197,6 +217,37 @@ export function registryDefaultBaseUrl(
 ): string | undefined {
   const entry = REGISTRIES[capability][registryId] as { defaultBaseUrl?: string } | undefined;
   return entry?.defaultBaseUrl || undefined;
+}
+
+/**
+ * Whether a workspace may point this preset at an endpoint of its own for a
+ * capability.
+ *
+ * True only for a preset built to take one: `trustsModelCatalogue: false` says
+ * the registry entry supplies nothing but the transport, so the endpoint *is*
+ * the service and the workspace's model list is the catalogue. The two
+ * `custom-image` / `custom-video` presets are the media case; the chat
+ * `openai-compatible` preset is the original one.
+ *
+ * False for every built-in service, and deliberately so: `openai-image`'s or
+ * `google-tts`'s endpoint is part of what that service is, so a workspace
+ * naming another one would be silently calling something else. Media endpoints
+ * are held to this rule at provider save, at assignment and again at run time
+ * (`lib/server/model-config/media.ts`), so a stored configuration cannot slip
+ * past it either.
+ */
+export function allowsWorkspaceEndpoint(
+  preset: ProviderPreset,
+  capability: SlotCapability,
+): boolean {
+  return preset.trustsModelCatalogue === false && !!preset.capabilities[capability];
+}
+
+/** Whether any capability of this preset accepts a workspace-supplied endpoint. */
+export function presetTakesWorkspaceEndpoint(preset: ProviderPreset): boolean {
+  return (Object.keys(preset.capabilities) as SlotCapability[]).some((capability) =>
+    allowsWorkspaceEndpoint(preset, capability),
+  );
 }
 
 /**

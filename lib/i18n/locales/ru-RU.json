@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "Своё изображение (совместимо с OpenAI)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (Локальный)",
     "testImageGeneration": "Тест генерации изображений",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "Своё видео (совместимо с OpenRouter)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "Тест генерации видео",
     "testVideoConnectivity": "Тест подключения",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "Сервер не подтвердил импорт."
       }
     },
-    "serverConfiguredAddOwn": "Чтобы использовать свои учётные данные, добавьте отдельного провайдера."
+    "serverConfiguredAddOwn": "Чтобы использовать свои учётные данные, добавьте отдельного провайдера.",
+    "customEndpointImageHint": "Запросы идут на {baseUrl}/images/generations — формат изображений, совместимый с OpenAI.",
+    "customEndpointVideoHint": "Запросы идут по API видео, совместимому с OpenRouter, на {baseUrl}: POST /videos, затем опрос и получение клипа.",
+    "customEndpointGenerateTitle": "Проверка генерации изображений",
+    "customEndpointGenerateHint": "Создаёт реальное изображение через эту конечную точку и показывает его. Это расходует квоту вашего провайдера и может быть платным.",
+    "customEndpointGeneratePrompt": "Тестовый запрос",
+    "customEndpointGenerateButton": "Создать тестовое изображение",
+    "customEndpointGenerating": "Создание…",
+    "customEndpointGenerateAlt": "Изображение, созданное этой конечной точкой",
+    "customEndpointGenerateOk": "Конечная точка создала изображение.",
+    "customEndpointGenerateFailed": "Не удалось создать изображение"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

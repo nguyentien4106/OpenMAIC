@@ -16,7 +16,11 @@
  * caller-supplied base URL, and a workspace may not set a proxy.
  */
 import { getSlot, type SlotId } from '@/lib/config/model-slots';
-import { registryDefaultBaseUrl } from '@/lib/config/provider-presets';
+import {
+  allowsWorkspaceEndpoint,
+  getProviderPreset,
+  registryDefaultBaseUrl,
+} from '@/lib/config/provider-presets';
 import { apiError } from '@/lib/server/api-response';
 import { InvalidOwnerCredentialError } from '@/lib/server/identity/resolve';
 import { invalidOwnerCredentialResponse } from '@/lib/server/identity/with-owner';
@@ -129,6 +133,13 @@ async function fromTarget(
     throw new SlotDisabledError(slot);
   }
   const managed = target.providerSource !== 'workspace';
+  // A workspace endpoint the build's own preset exists to take: its registry
+  // entry is the transport and nothing else, so the workspace's URL is the
+  // service rather than an override of one. Every other workspace provider
+  // reaches media only at its preset's own public endpoint.
+  const targetPreset = getProviderPreset(target.presetId);
+  const workspaceEndpointPreset =
+    targetPreset !== undefined && allowsWorkspaceEndpoint(targetPreset, getSlot(slot).capability);
   if (!managed) {
     // Media, search and document adapters each connect their own way; a
     // workspace provider reaches them only at the preset's own endpoints. A
@@ -140,14 +151,18 @@ async function fromTarget(
         'A proxy can only be configured by the deployment (openmaic.yml)',
       );
     }
-    if (target.customBaseUrl) {
+    if (target.customBaseUrl && !workspaceEndpointPreset) {
       throw new WorkspaceEndpointError(
         `A custom endpoint for ${slot} can only be configured by the deployment (openmaic.yml)`,
       );
     }
     // A self-hosted preset's default endpoint is on the server's own network.
-    const endpoint =
-      target.baseUrl ?? registryDefaultBaseUrl(getSlot(slot).capability, target.registryId);
+    // A workspace-named endpoint is exempt from the *default* check — the
+    // endpoint is the workspace's, not a preset default it did not choose — but
+    // it is held to the strict public-network policy below instead.
+    const endpoint = workspaceEndpointPreset
+      ? undefined
+      : (target.baseUrl ?? registryDefaultBaseUrl(getSlot(slot).capability, target.registryId));
     if (endpoint && isLocalEndpoint(endpoint)) {
       throw new WorkspaceEndpointError(
         `The ${target.presetId} preset runs on the server's own network; only the deployment (openmaic.yml) can configure it`,
@@ -163,11 +178,13 @@ async function fromTarget(
     ...(target.proxy !== undefined ? { proxy: target.proxy } : {}),
     ...(target.options !== undefined ? { options: target.options } : {}),
     managed,
-    // A workspace provider reaches only its preset's own public endpoint (a
+    // A workspace provider reaches either its preset's own public endpoint (a
     // custom one and a local-default preset are refused above), exactly the
-    // endpoint a deployment's default would use: no user-typed endpoint, so
-    // the transports keep the operator's policy.
-    userEndpoint: false,
+    // endpoint a deployment's default would use, or — for a preset built to
+    // take one — an address the workspace typed. Only the latter is a
+    // user-supplied endpoint, and callers that care (the public-network-only
+    // checks) must treat it as such.
+    userEndpoint: !managed && !!target.customBaseUrl,
     origin,
   };
 }

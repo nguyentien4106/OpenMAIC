@@ -32,6 +32,8 @@ const IMAGE_PROVIDER_ICONS: Record<string, string> = {
   'comfyui-image': '/logos/comfyui.svg',
   'openrouter-image': '/logos/openrouter.svg',
   lemonade: '/logos/lemonade.svg',
+  // No vendor behind it: the generic box is the honest mark (see entryIcon,
+  // which drops the logo for a custom endpoint for the same reason).
 };
 
 const VIDEO_PROVIDER_ICONS: Record<string, string> = {

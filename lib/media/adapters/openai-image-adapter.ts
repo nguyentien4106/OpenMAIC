@@ -63,6 +63,15 @@ export async function testOpenAIImageConnectivity(
 export async function generateWithOpenAIImage(
   config: ImageGenerationConfig,
   options: ImageGenerationOptions,
+  /**
+   * Extra top-level body fields, for a caller whose endpoint wants another
+   * spelling of the same request. The custom endpoint uses it to send
+   * `aspect_ratio` alongside `size`: the OpenAI-family field is `size`, but a
+   * relay written against a gateway convention may read only `aspect_ratio`,
+   * and the two describe the same shape, so sending both asks for the same
+   * image whichever one the endpoint understands.
+   */
+  extraBody?: Record<string, unknown>,
 ): Promise<ImageGenerationResult> {
   const baseUrl = normalizeBaseUrl(config.baseUrl);
   const model = requireModel(config.model, 'OpenAI Image');
@@ -81,7 +90,9 @@ export async function generateWithOpenAIImage(
       prompt: options.prompt,
       n: 1,
       size: resolveSize(options),
+      ...extraBody,
     }),
+    ...(options.signal ? { signal: options.signal } : {}),
   });
 
   assertNotRedirected(response, 'OpenAI Image');

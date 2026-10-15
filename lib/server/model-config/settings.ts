@@ -25,9 +25,11 @@ import {
 } from '@/lib/config/model-slots';
 import {
   PROVIDER_PRESETS,
+  allowsWorkspaceEndpoint,
   catalogueModel,
   getProviderPreset,
   presetModels,
+  presetTakesWorkspaceEndpoint,
   registryDefaultBaseUrl,
   registryRequiresApiKey,
   type CatalogueModel,
@@ -277,8 +279,12 @@ function capabilityModels(
     if (registryId && isForceDisabled(capability, registryId)) continue;
     const offered = preset.trustsModelCatalogue === false ? [] : presetModels(preset, capability);
     // A provider's own model list narrows (or names) the chat models it serves.
+    // For a capability whose preset has no catalogue at all — a workspace's own
+    // endpoint (`custom-image`, `custom-video`) — that list is not a narrowing
+    // but the catalogue itself: there is nothing behind the endpoint the build
+    // could name, so the workspace's ids are all there is to offer.
     const models =
-      capability === 'chat' && pinned?.length
+      pinned?.length && (capability === 'chat' || preset.trustsModelCatalogue === false)
         ? pinned.map(
             (id) =>
               offered.find((model) => model.id === id) ??
@@ -333,7 +339,11 @@ function workspacePresetProblem(preset: ProviderPreset): string | undefined {
   if (preset.requiresCredentials) {
     return `${preset.name} authenticates with a key pair, which only the deployment (openmaic.yml) can configure`;
   }
-  if (preset.requiresBaseUrl && !preset.capabilities.chat) {
+  if (
+    preset.requiresBaseUrl &&
+    !preset.capabilities.chat &&
+    !presetTakesWorkspaceEndpoint(preset)
+  ) {
     return `A custom endpoint for ${preset.name} can only be configured by the deployment (openmaic.yml)`;
   }
   for (const [capability, target] of Object.entries(preset.capabilities) as [
@@ -449,23 +459,32 @@ export function modelSettingsView(stored: StoredWorkspaceConfig | null): ModelSe
       ...(provider.models ? { models: [...provider.models] } : {}),
       capabilities: capabilityModels(getProviderPreset(provider.preset), provider.models),
     })),
-    ...Object.entries(workspaceProviders).map(([id, provider]) => ({
-      id,
-      preset: provider.preset,
-      ...presetLabel(provider.preset),
-      source: 'workspace' as const,
-      ...(provider.baseUrl ? { baseUrl: viewEndpoint(provider.baseUrl) } : {}),
-      ...(provider.models ? { models: [...provider.models] } : {}),
-      capabilities: capabilityModels(getProviderPreset(provider.preset), provider.models, {
-        // An official regional endpoint is the service's own, not a custom one.
-        chatOnly: provider.baseUrl !== undefined && !officialEndpointOf(provider),
-      }),
-      key: {
-        set: Boolean(provider.apiKey) || unreadable.has(id),
-        ...(provider.apiKey ? { mask: maskKey(provider.apiKey) } : {}),
-        ...(unreadable.has(id) ? { unreadable: true } : {}),
-      },
-    })),
+    ...Object.entries(workspaceProviders).map(([id, provider]) => {
+      const preset = getProviderPreset(provider.preset);
+      // Its own endpoint means chat only — unless the preset exists to take one
+      // (`custom-image`, `custom-video`), where the endpoint is the service and
+      // the capability it declares is exactly what it serves. Without this the
+      // provider would offer no capability at all in the settings, and so could
+      // never be assigned or shown.
+      const ownEndpoint =
+        provider.baseUrl !== undefined &&
+        !officialEndpointOf(provider) &&
+        !(preset && presetTakesWorkspaceEndpoint(preset));
+      return {
+        id,
+        preset: provider.preset,
+        ...presetLabel(provider.preset),
+        source: 'workspace' as const,
+        ...(provider.baseUrl ? { baseUrl: viewEndpoint(provider.baseUrl) } : {}),
+        ...(provider.models ? { models: [...provider.models] } : {}),
+        capabilities: capabilityModels(preset, provider.models, { chatOnly: ownEndpoint }),
+        key: {
+          set: Boolean(provider.apiKey) || unreadable.has(id),
+          ...(provider.apiKey ? { mask: maskKey(provider.apiKey) } : {}),
+          ...(unreadable.has(id) ? { unreadable: true } : {}),
+        },
+      };
+    }),
   ];
 
   const deploymentSlots = deployment?.config.slots ?? {};
@@ -501,7 +520,10 @@ export function modelSettingsView(stored: StoredWorkspaceConfig | null): ModelSe
           kind: preset.kind,
           capabilities,
           requiresBaseUrl: needsOwnEndpoint(preset),
-          customEndpoint: Boolean(preset.capabilities.chat) || regionalEndpoint !== undefined,
+          customEndpoint:
+            Boolean(preset.capabilities.chat) ||
+            presetTakesWorkspaceEndpoint(preset) ||
+            regionalEndpoint !== undefined,
           ...(regionalEndpoint ? { regionalEndpoint } : {}),
           // Only what can be assigned: a capability the operator switched off is out.
           recommended: Object.fromEntries(
@@ -538,8 +560,14 @@ async function checkProvider(id: string, provider: Provider): Promise<void> {
   // search and document services are reached at a preset's own endpoints
   // (lib/server/model-config/media.ts refuses anything else at run time). A
   // regional service's own endpoint names its region on the official host.
+  //
+  // The exception is a preset built to take a workspace endpoint: its entry is
+  // the transport and nothing else (`custom-image`, `custom-video`), so the
+  // endpoint is not an override of a service but the service itself. Its URL is
+  // still validated, stored per provider, and reached at run time under the
+  // strict public-network policy rather than the operator's.
   const regional = presetRegionalEndpointTemplate(preset);
-  if (provider.baseUrl && !preset.capabilities.chat) {
+  if (provider.baseUrl && !preset.capabilities.chat && !presetTakesWorkspaceEndpoint(preset)) {
     if (regional && presetOfficialRegionalEndpoint(preset, provider.baseUrl)) return;
     throw new ModelSettingsError(
       'INVALID_PROVIDER',
@@ -556,6 +584,21 @@ async function checkProvider(id: string, provider: Provider): Promise<void> {
       regional
         ? `The ${preset.name} preset needs its regional endpoint (${regional})`
         : `The ${preset.name} preset needs a base URL`,
+    );
+  }
+  // A workspace endpoint on a media capability has no catalogue to fall back
+  // on, so a provider without models would be storable but unusable: it offers
+  // nothing to assign, and the first generation would fail on a missing model.
+  // Chat is left out deliberately — its own compatible preset already requires
+  // the list in the form, and its transport reports a missing model per call.
+  if (
+    !preset.capabilities.chat &&
+    presetTakesWorkspaceEndpoint(preset) &&
+    !provider.models?.length
+  ) {
+    throw new ModelSettingsError(
+      'INVALID_PROVIDER',
+      `The ${preset.name} preset needs at least one model id`,
     );
   }
   if (provider.baseUrl) {
@@ -749,13 +792,20 @@ export async function applyModelSettingsChange(
         );
       }
       if (resolution.status === 'assigned' && getSlot(slot as SlotId).capability !== 'chat') {
+        const capability = getSlot(slot as SlotId).capability;
         for (const target of [resolution, resolution.fallback]) {
-          if (target?.providerSource === 'workspace' && target.customBaseUrl) {
-            throw new ModelSettingsError(
-              'INVALID_ASSIGNMENT',
-              `${slot} cannot use ${target.providerId}: a workspace provider with its own endpoint serves chat slots only`,
-            );
-          }
+          if (!target || target.providerSource !== 'workspace' || !target.customBaseUrl) continue;
+          // A preset built to take a workspace endpoint is assignable to the
+          // capability it declares: the workspace named the endpoint on purpose
+          // and the runtime reaches it under the strict public-network policy.
+          // Any other preset's endpoint is the service's own, and a workspace
+          // pointing it elsewhere would be calling something else.
+          const targetPreset = getProviderPreset(target.presetId);
+          if (targetPreset && allowsWorkspaceEndpoint(targetPreset, capability)) continue;
+          throw new ModelSettingsError(
+            'INVALID_ASSIGNMENT',
+            `${slot} cannot use ${target.providerId}: a workspace provider with its own endpoint serves chat slots only`,
+          );
         }
       }
     } catch (error) {

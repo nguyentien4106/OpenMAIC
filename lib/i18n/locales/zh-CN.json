@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax 图像",
     "providerGrokImage": "Grok Image（xAI）",
     "providerOpenRouterImage": "OpenRouter 图像",
+    "providerCustomImage": "自定义图像（OpenAI 兼容）",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade 图像（本地）",
     "testImageGeneration": "测试图像生成",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax 视频",
     "providerGrokVideo": "Grok Video（xAI）",
     "providerOpenRouterVideo": "OpenRouter 视频",
+    "providerCustomVideo": "自定义视频（OpenRouter 兼容）",
     "providerHappyHorse": "HappyHorse（阿里云百炼）",
     "testVideoGeneration": "测试视频生成",
     "testVideoConnectivity": "测试连接",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "服务器未确认已导入。"
       }
     },
-    "serverConfiguredAddOwn": "如需使用自己的凭据，请新增一个提供方。"
+    "serverConfiguredAddOwn": "如需使用自己的凭据，请新增一个提供方。",
+    "customEndpointImageHint": "请求发送到 {baseUrl}/images/generations，即 OpenAI 兼容的图像接口格式。",
+    "customEndpointVideoHint": "请求遵循 {baseUrl} 上的 OpenRouter 兼容视频 API：POST /videos，然后轮询并获取视频。",
+    "customEndpointGenerateTitle": "测试图像生成",
+    "customEndpointGenerateHint": "通过此 endpoint 生成一张真实图像并显示结果。这会消耗你的服务商配额，可能产生费用。",
+    "customEndpointGeneratePrompt": "测试提示词",
+    "customEndpointGenerateButton": "生成测试图像",
+    "customEndpointGenerating": "正在生成…",
+    "customEndpointGenerateAlt": "由该 endpoint 生成的图像",
+    "customEndpointGenerateOk": "该 endpoint 已成功生成图像。",
+    "customEndpointGenerateFailed": "生成失败"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "Imagem personalizada (compatível com OpenAI)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (Local)",
     "testImageGeneration": "Testar Geração de Imagem",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "Vídeo personalizado (compatível com OpenRouter)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "Testar Geração de Vídeo",
     "testVideoConnectivity": "Testar Conexão",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "O servidor não confirmou a importação."
       }
     },
-    "serverConfiguredAddOwn": "Para usar suas próprias credenciais, adicione um provedor separado."
+    "serverConfiguredAddOwn": "Para usar suas próprias credenciais, adicione um provedor separado.",
+    "customEndpointImageHint": "As requisições vão para {baseUrl}/images/generations, o formato de imagem compatível com OpenAI.",
+    "customEndpointVideoHint": "As requisições seguem a API de vídeo compatível com OpenRouter em {baseUrl}: POST /videos, depois consultar e baixar o clipe.",
+    "customEndpointGenerateTitle": "Testar geração de imagem",
+    "customEndpointGenerateHint": "Gera uma imagem real por este endpoint e a exibe. Isso consome a cota do seu provedor e pode ser cobrado.",
+    "customEndpointGeneratePrompt": "Prompt de teste",
+    "customEndpointGenerateButton": "Gerar imagem de teste",
+    "customEndpointGenerating": "Gerando…",
+    "customEndpointGenerateAlt": "Imagem gerada por este endpoint",
+    "customEndpointGenerateOk": "O endpoint gerou uma imagem.",
+    "customEndpointGenerateFailed": "A geração falhou"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

@@ -1670,6 +1670,7 @@
     "providerMiniMaxImage": "MiniMax Image",
     "providerGrokImage": "Grok Image (xAI)",
     "providerOpenRouterImage": "OpenRouter Image",
+    "providerCustomImage": "Imagen personalizada (compatible con OpenAI)",
     "providerComfyUIImage": "ComfyUI Image",
     "providerLemonadeImage": "Lemonade Image (local)",
     "testImageGeneration": "Probar generación de imágenes",
@@ -1690,6 +1691,7 @@
     "providerMiniMaxVideo": "MiniMax Video",
     "providerGrokVideo": "Grok Video (xAI)",
     "providerOpenRouterVideo": "OpenRouter Video",
+    "providerCustomVideo": "Video personalizado (compatible con OpenRouter)",
     "providerHappyHorse": "HappyHorse (Alibaba Cloud)",
     "testVideoGeneration": "Probar generación de videos",
     "testVideoConnectivity": "Probar conexión",
@@ -2163,7 +2165,17 @@
         "unconfirmed": "El servidor no confirmó que se importara."
       }
     },
-    "serverConfiguredAddOwn": "Para usar tus propias credenciales, agrega un proveedor aparte."
+    "serverConfiguredAddOwn": "Para usar tus propias credenciales, agrega un proveedor aparte.",
+    "customEndpointImageHint": "Las solicitudes se envían a {baseUrl}/images/generations, el formato de imagen compatible con OpenAI.",
+    "customEndpointVideoHint": "Las solicitudes siguen la API de video compatible con OpenRouter en {baseUrl}: POST /videos, luego consultar y obtener el clip.",
+    "customEndpointGenerateTitle": "Probar la generación de imágenes",
+    "customEndpointGenerateHint": "Genera una imagen real a través de este endpoint y la muestra. Esto consume la cuota de tu proveedor y puede facturarse.",
+    "customEndpointGeneratePrompt": "Prompt de prueba",
+    "customEndpointGenerateButton": "Generar imagen de prueba",
+    "customEndpointGenerating": "Generando…",
+    "customEndpointGenerateAlt": "Imagen generada por este endpoint",
+    "customEndpointGenerateOk": "El endpoint generó una imagen.",
+    "customEndpointGenerateFailed": "La generación falló"
   },
   "workspace": {
     "untitledCourse": "未命名课堂",

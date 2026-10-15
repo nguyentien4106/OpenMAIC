@@ -69,6 +69,7 @@ async function fetchVideoDataUrl(
   baseUrl: string,
   apiKey: string,
   jobId: string,
+  providerLabel: string,
   signal?: AbortSignal,
 ): Promise<string> {
   const response = await fetchImpl(
@@ -82,7 +83,7 @@ async function fetchVideoDataUrl(
   );
   if (!response.ok) {
     const text = await response.text().catch(() => '');
-    throw new Error(`OpenRouter video download failed (${response.status}): ${text}`);
+    throw new Error(`${providerLabel} video download failed (${response.status}): ${text}`);
   }
   const mimeType = response.headers.get('content-type') || 'video/mp4';
   const buffer = await response.arrayBuffer();
@@ -96,11 +97,19 @@ async function resolveJob(
   baseUrl: string,
   apiKey: string,
   options: VideoGenerationOptions,
+  providerLabel: string,
 ): Promise<PollResult<VideoGenerationResult>> {
   switch (job.status) {
     case 'completed': {
-      if (!job.id) throw new Error('OpenRouter returned a completed job without an id');
-      const url = await fetchVideoDataUrl(fetchImpl, baseUrl, apiKey, job.id, options.signal);
+      if (!job.id) throw new Error(`${providerLabel} returned a completed job without an id`);
+      const url = await fetchVideoDataUrl(
+        fetchImpl,
+        baseUrl,
+        apiKey,
+        job.id,
+        providerLabel,
+        options.signal,
+      );
       const { width, height } = getDimensions(options.aspectRatio);
       return {
         status: 'done',
@@ -112,7 +121,7 @@ async function resolveJob(
     case 'expired':
       return {
         status: 'failed',
-        message: `OpenRouter video generation ${job.status}: ${job.error || 'no reason given'}`,
+        message: `${providerLabel} video generation ${job.status}: ${job.error || 'no reason given'}`,
       };
     default:
       return { status: 'pending', detail: job.status };
@@ -125,6 +134,7 @@ async function submitVideoJob(
   apiKey: string,
   model: string,
   options: VideoGenerationOptions,
+  providerLabel: string,
 ): Promise<OpenRouterVideoJob> {
   const body: Record<string, unknown> = { model, prompt: options.prompt };
   if (options.aspectRatio) body.aspect_ratio = options.aspectRatio;
@@ -141,7 +151,7 @@ async function submitVideoJob(
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`OpenRouter video submit failed (${response.status}): ${text}`);
+    throw new Error(`${providerLabel} video submit failed (${response.status}): ${text}`);
   }
   return response.json() as Promise<OpenRouterVideoJob>;
 }
@@ -151,6 +161,7 @@ async function pollVideoJob(
   baseUrl: string,
   apiKey: string,
   jobId: string,
+  providerLabel: string,
   signal?: AbortSignal,
 ): Promise<OpenRouterVideoJob> {
   const response = await fetchImpl(`${baseUrl}/videos/${encodeURIComponent(jobId)}`, {
@@ -161,7 +172,7 @@ async function pollVideoJob(
   });
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`OpenRouter video poll failed (${response.status}): ${text}`);
+    throw new Error(`${providerLabel} video poll failed (${response.status}): ${text}`);
   }
   return response.json() as Promise<OpenRouterVideoJob>;
 }
@@ -211,9 +222,16 @@ export async function generateWithOpenRouterVideo(
   config: VideoGenerationConfig,
   options: VideoGenerationOptions,
   control?: PolledTaskControl,
+  /**
+   * What a failure names. OpenRouter's `/videos` shape is a gateway contract
+   * rather than any one vendor's, so a caller reaching that protocol at an
+   * endpoint of its own (`custom-video`) names itself here instead of
+   * reporting an OpenRouter failure it never made.
+   */
+  providerLabel = 'OpenRouter',
 ): Promise<VideoGenerationResult> {
   const baseUrl = openRouterBaseUrl(config.baseUrl);
-  const model = requireModel(config.model, 'OpenRouter Video');
+  const model = requireModel(config.model, `${providerLabel} Video`);
 
   return runPolledTask<VideoGenerationResult>({
     submit: async () => {
@@ -223,8 +241,9 @@ export async function generateWithOpenRouterVideo(
         config.apiKey,
         model,
         options,
+        providerLabel,
       );
-      if (!job.id) throw new Error('OpenRouter returned a video job without an id');
+      if (!job.id) throw new Error(`${providerLabel} returned a video job without an id`);
       // A job can already be terminal on submit; only 'pending'/'in_progress' waits.
       const resolved = await resolveJob(
         mediaFetchFor(config),
@@ -232,6 +251,7 @@ export async function generateWithOpenRouterVideo(
         baseUrl,
         config.apiKey,
         options,
+        providerLabel,
       );
       return resolved.status === 'pending' ? { status: 'submitted', taskId: job.id } : resolved;
     },
@@ -241,6 +261,7 @@ export async function generateWithOpenRouterVideo(
         baseUrl,
         config.apiKey,
         jobId,
+        providerLabel,
         options.signal,
       );
       // Poll responses may omit the id; keep the one we submitted with.
@@ -250,11 +271,12 @@ export async function generateWithOpenRouterVideo(
         baseUrl,
         config.apiKey,
         options,
+        providerLabel,
       );
     },
     intervalMs: POLL_INTERVAL_MS,
     maxAttempts: MAX_POLL_ATTEMPTS,
-    label: 'OpenRouter video generation',
+    label: `${providerLabel} video generation`,
     control,
     // Cancelling a generation should stop the poll immediately, not after the
     // current 10s sleep elapses.
